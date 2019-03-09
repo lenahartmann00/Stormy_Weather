@@ -12,3 +12,4 @@ I built this app during the Android Course at Treehouse. Since the location was 
 - downloading WebContent using the okHttp library
 - data binding
 - getting current location from the user
+
