@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,32 +49,44 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-
-    private double latitude = 37.8267;
-    private double longitude = -122.4233;
-
     private CurrentWeather currentWeather;
-    private CurrentLocation currentLocation;
+    private CurrentLocation currentLocation = new CurrentLocation();
 
     private ImageView iconImageView;
-    TextView cityTextView;
+
+    ActivityMainBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getCurrentLocationData();
-        getForecast(longitude, latitude);
-        Log.i(TAG, "Latitude: " + latitude + " Longtitude: " + longitude);
+        binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+        getForecast();
     }
 
 
-    private void getCurrentLocationData() {
+    private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         } else{
-            updateCurrentLocation();
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            updateLocation(lastKnownLocation);
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    updateLocation(location);
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+                public void onProviderEnabled(String provider) {}
+
+                public void onProviderDisabled(String provider) {}
+            };
+
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) locationListener);
+            locationManager.removeUpdates(locationListener);
         }
     }
 
@@ -85,71 +96,59 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateCurrentLocation();
+                    getCurrentLocation();
                 } else {
-                    Toast.makeText(this, "To use the app properly, please give permission to access your location", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "To use the app properly, please give permission to access your location", Toast.LENGTH_LONG).show();
                 }
             }
         }
 
     }
 
-    @SuppressLint("MissingPermission")
-    private void updateCurrentLocation(){
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        @SuppressLint("MissingPermission") Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        setLongitudeAndLatitude(lastKnownLocation);
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                setLongitudeAndLatitude(location);
-            }
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+    private void updateLocation(Location location){
+        currentLocation = new CurrentLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        currentLocation.setLatitude(latitude);
+        currentLocation.setLongitude(longitude);
+        String city = getLocality(latitude, longitude);
+        currentLocation.setCity(city);
 
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) locationListener);
-        locationManager.removeUpdates(locationListener);
+        CurrentLocation displayLocation = new CurrentLocation(latitude, longitude, city);
+        binding.setLocation(displayLocation);
     }
 
-    private void updateCity(){
+    private String getLocality(double latitude, double longitude){
+        String locality = "";
         try {
-            cityTextView = findViewById(R.id.txt_city);
             Geocoder gcd = new Geocoder(this, Locale.getDefault());
             List <Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
-                String city = addresses.get(0).getLocality();
-                cityTextView.setText(city);
-            }else {
-                cityTextView.setText(getString(R.string.textView_location));
+                locality = addresses.get(0).getLocality();
             }
         } catch (IOException e) {
             Log.e(TAG, "IOException occured: ", e);
         }
+        return locality;
     }
 
-    private void setLongitudeAndLatitude(Location location) {
-        if(location != null){
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            Log.d(TAG, "Latitude: "+latitude+" Longtitude: "+longitude);
-        }
-    }
+
+
+
+
 
     public void refreshOnClick(View view){
         Toast.makeText(this, "Refreshing data", Toast.LENGTH_SHORT).show();
-        getForecast(longitude, latitude);
+        getForecast();
     }
 
-    private void getForecast(double longitude, double latitude){
-        final ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+    private void getForecast(){
+        getCurrentLocation();
         String apiKey ="82f98db283cc7166db051654bf6ab651";
 
         String forecastUrl = "https://api.darksky.net/forecast/"
-                +apiKey+"/"+latitude+","+longitude;
+                +apiKey+"/"+currentLocation.getLatitude()+","+currentLocation.getLongitude();
         TextView darkSky = findViewById(R.id.txt_dark_sky);
         darkSky.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         String jsonData = response.body().string();
                         if (response.isSuccessful()) {
-                            currentWeather = getCurrentDetails(jsonData);
+                            currentWeather = getCurrentWeatherDetails(jsonData);
 
                             final CurrentWeather displayWeather = new CurrentWeather(
                                     currentWeather.getLocationLabel(),
@@ -193,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     Drawable drawable = getResources().getDrawable(displayWeather.getIconId());
                                     iconImageView.setImageDrawable(drawable);
-                                    updateCity();
                                 }
                             });
                         } else{
@@ -210,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private CurrentWeather getCurrentDetails(String jsonData) throws JSONException{
+    private CurrentWeather getCurrentWeatherDetails(String jsonData) throws JSONException{
         JSONObject forecast = new JSONObject(jsonData);
         JSONObject currently = forecast.getJSONObject("currently");
         CurrentWeather currentWeather = new CurrentWeather();
@@ -246,22 +244,5 @@ public class MainActivity extends AppCompatActivity {
     private void alterUserAboutError() {
         AlterDialogFragment dialog = new AlterDialogFragment();
         dialog.show(getSupportFragmentManager(), "error_dialog");
-    }
-
-    //Getter and setter
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 }

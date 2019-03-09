@@ -22,13 +22,16 @@ public class CurrentLocation {
     private String city;
 
 
-    private void getCurrentLocationData() {
-        if (ActivityCompat.checkSelfPermission(, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        } else{
-            updateCurrentLocation();
-        }
+    public CurrentLocation(){
+        this.latitude = 37.8267;
+        this.longitude = -122.4233;
+        this.city = "Alcatraz Island, CA";
+    }
+
+    public CurrentLocation(double latitude, double longitude, String city) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.city = city;
     }
 
     //Getter and Setter

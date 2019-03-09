@@ -6,8 +6,6 @@
         <variable
             name="weather"
             type="com.lenahartmann00.stormyweather.model.CurrentWeather"/>
-    </data>
-    <data>
         <variable
             name="location"
             type="com.lenahartmann00.stormyweather.model.CurrentLocation"/>
