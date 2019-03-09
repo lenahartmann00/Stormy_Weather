@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.lenahartmann00.stormyweather.databinding.ActivityMainBinding;
 import com.lenahartmann00.stormyweather.R;
+import com.lenahartmann00.stormyweather.model.CurrentLocation;
 import com.lenahartmann00.stormyweather.model.CurrentWeather;
 
 import org.json.JSONException;
@@ -45,6 +46,8 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
 
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private double longitude = -122.4233;
 
     private CurrentWeather currentWeather;
+    private CurrentLocation currentLocation;
 
     private ImageView iconImageView;
     TextView cityTextView;
@@ -113,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateCity(){
         try {
-
             cityTextView = findViewById(R.id.txt_city);
             Geocoder gcd = new Geocoder(this, Locale.getDefault());
             List <Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
@@ -243,5 +246,22 @@ public class MainActivity extends AppCompatActivity {
     private void alterUserAboutError() {
         AlterDialogFragment dialog = new AlterDialogFragment();
         dialog.show(getSupportFragmentManager(), "error_dialog");
+    }
+
+    //Getter and setter
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
