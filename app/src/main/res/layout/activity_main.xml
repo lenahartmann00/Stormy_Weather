@@ -51,7 +51,7 @@
         app:layout_constraintBottom_toTopOf="@+id/txt_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/textView_location" />
+        android:text="@{location.city}" />
 
     <TextView
         android:id="@+id/txt_time"
