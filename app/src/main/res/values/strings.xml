@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Stormy Weather</string>
+    <string name="error_title">Oops! Sorry</string>
+    <string name="error_message">There was an error. Please try again.</string>
+    <string name="error_button_ok">OK</string>
+    <string name="network_unavailable_message">Sorry, the network is unavailable</string>
+    <string name="textView_location">Alcatraz Island, CA</string>
+    <string name="txt_intro">At 5:00 PM it will be</string>
+    <string name="description_weather_icon">Image weather icon</string>
+    <string name="description_degree_image">image degree symbol</string>
+    <string name="dark_sky_message"><a href="https://darksky.net/poweredby">Powered by Dark Sky</a></string>
+    <string name="no_permissions_given_warning">You will only see weather from Alcatraz Island, CA</string>
+</resources>
