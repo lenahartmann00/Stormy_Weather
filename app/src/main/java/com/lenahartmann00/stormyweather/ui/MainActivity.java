@@ -136,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
     public void refreshOnClick(View view){
         Toast.makeText(this, "Refreshing data", Toast.LENGTH_SHORT).show();
         getForecast();

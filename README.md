@@ -7,9 +7,9 @@ I built this app during the Android Course at Treehouse. Since the location was 
  
 ## What I learned
 - applying the MVC Pattern
-- getting data from RESTful APIs(JSON) [DarkSky](https://darksky.net/dev)
+- getting data from RESTful APIs(JSON) ([DarkSky](https://darksky.net/dev))
 - using a DialogFragment to handle missing network connection
-- downloading WebContent using the okHttp library
+- downloading WebContent using the [okHttp library](https://square.github.io/okhttp/)
 - data binding
 - getting current location from the user
 
