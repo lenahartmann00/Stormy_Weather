@@ -1,28 +1,13 @@
 package com.lenahartmann00.stormyweather.model;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-
-import com.lenahartmann00.stormyweather.R;
-import com.lenahartmann00.stormyweather.ui.MainActivity;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 public class CurrentLocation {
 
-
     private double latitude;
-    private  double longitude;
+    private double longitude;
     private String city;
 
 
-    public CurrentLocation(){
+    public CurrentLocation() {
         this.latitude = 37.8267;
         this.longitude = -122.4233;
         this.city = "Alcatraz Island, CA";

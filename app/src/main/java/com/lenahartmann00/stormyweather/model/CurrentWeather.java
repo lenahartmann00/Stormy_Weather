@@ -3,7 +3,6 @@ package com.lenahartmann00.stormyweather.model;
 import com.lenahartmann00.stormyweather.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -17,7 +16,7 @@ public class CurrentWeather {
     private String summary;
     private String timezone;
 
-    public CurrentWeather(){
+    public CurrentWeather() {
 
     }
 
@@ -45,12 +44,12 @@ public class CurrentWeather {
     public String getIcon() {
         return icon;
     }
-    
-    public int getIconId(){
+
+    public int getIconId() {
         //clear-day, clear-night, rain, snow, sleet, wind, fog,
         // cloudy, partly-cloudy-day, or partly-cloudy-night
-        int iconId = R.drawable.clear_day;
-        switch(getIcon()) {
+        int iconId;
+        switch (getIcon()) {
             case "rain":
                 iconId = R.drawable.rain;
                 break;
@@ -75,6 +74,8 @@ public class CurrentWeather {
             case "partly-cloudy-night":
                 iconId = R.drawable.cloudy_night;
                 break;
+            default:
+                iconId = R.drawable.clear_day;
         }
         return iconId;
     }
@@ -87,12 +88,12 @@ public class CurrentWeather {
         return time;
     }
 
-    public String getFormattedTime(){
+    public String getFormattedTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US); //h -> hours without leading zero,
-                                                                            // mm -> minutes with leading zero,
-                                                                            // a -> AM/PM
+        // mm -> minutes with leading zero,
+        // a -> AM/PM
         formatter.setTimeZone(TimeZone.getTimeZone(timezone));
-        return formatter.format(time*1000); //time has to be in s
+        return formatter.format(time * 1000); //time has to be in s
     }
 
     public void setTime(long time) {
@@ -140,16 +141,4 @@ public class CurrentWeather {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    
 }

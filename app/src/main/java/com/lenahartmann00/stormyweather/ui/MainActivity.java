@@ -1,7 +1,6 @@
 package com.lenahartmann00.stormyweather.ui;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -13,10 +12,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -24,8 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lenahartmann00.stormyweather.databinding.ActivityMainBinding;
 import com.lenahartmann00.stormyweather.R;
+import com.lenahartmann00.stormyweather.databinding.ActivityMainBinding;
 import com.lenahartmann00.stormyweather.model.CurrentLocation;
 import com.lenahartmann00.stormyweather.model.CurrentWeather;
 
@@ -44,7 +43,6 @@ import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
-
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        } else{
+        } else {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             updateLocation(lastKnownLocation);
@@ -78,11 +76,14 @@ public class MainActivity extends AppCompatActivity {
                     updateLocation(location);
                 }
 
-                public void onStatusChanged(String provider, int status, Bundle extras) {}
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
 
-                public void onProviderEnabled(String provider) {}
+                public void onProviderEnabled(String provider) {
+                }
 
-                public void onProviderDisabled(String provider) {}
+                public void onProviderDisabled(String provider) {
+                }
             };
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) locationListener);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void updateLocation(Location location){
+    private void updateLocation(Location location) {
         currentLocation = new CurrentLocation();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
@@ -119,11 +120,11 @@ public class MainActivity extends AppCompatActivity {
         binding.setLocation(displayLocation);
     }
 
-    private String getLocality(double latitude, double longitude){
+    private String getLocality(double latitude, double longitude) {
         String locality = "";
         try {
             Geocoder gcd = new Geocoder(this, Locale.getDefault());
-            List <Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
                 locality = addresses.get(0).getLocality();
             }
@@ -134,19 +135,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    public void refreshOnClick(View view){
+    public void refreshOnClick(View view) {
         Toast.makeText(this, "Refreshing data", Toast.LENGTH_SHORT).show();
         getForecast();
     }
 
-    private void getForecast(){
+    private void getForecast() {
         getCurrentLocation();
-        String apiKey ="82f98db283cc7166db051654bf6ab651";
+        String apiKey = "82f98db283cc7166db051654bf6ab651";
 
         String forecastUrl = "https://api.darksky.net/forecast/"
-                +apiKey+"/"+currentLocation.getLatitude()+","+currentLocation.getLongitude();
+                + apiKey + "/" + currentLocation.getLatitude() + "," + currentLocation.getLongitude();
         TextView darkSky = findViewById(R.id.txt_dark_sky);
         darkSky.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                                     iconImageView.setImageDrawable(drawable);
                                 }
                             });
-                        } else{
+                        } else {
                             alterUserAboutError();
                         }
                     } catch (IOException e) {
@@ -206,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private CurrentWeather getCurrentWeatherDetails(String jsonData) throws JSONException{
+    private CurrentWeather getCurrentWeatherDetails(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
         JSONObject currently = forecast.getJSONObject("currently");
         CurrentWeather currentWeather = new CurrentWeather();
@@ -219,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         currentWeather.setIcon(currently.getString("icon"));
         currentWeather.setTimezone(forecast.getString("timezone"));
         //Convert Fahrenheit to Celsius
-        double tempCelsius = ((currently.getDouble("temperature"))-32)*5/9;
+        double tempCelsius = ((currently.getDouble("temperature")) - 32) * 5 / 9;
         currentWeather.setTemperature(tempCelsius);
 
         return currentWeather;
