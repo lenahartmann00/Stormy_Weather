@@ -2,10 +2,6 @@ package com.lenahartmann00.stormyweather.model;
 
 import com.lenahartmann00.stormyweather.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class CurrentWeather {
     private String locationLabel;
     private String icon;
@@ -31,6 +27,9 @@ public class CurrentWeather {
         this.timezone = timezone;
     }
 
+    public static double convertFahrenheitToCelsius(double fahrenheit) {
+        return (fahrenheit - 32) * 5 / 9;
+    }
 
     //Getter and Setter
     public void setLocationLabel(String locationLabel) {
@@ -87,14 +86,6 @@ public class CurrentWeather {
 
     public long getTime() {
         return time;
-    }
-
-    public String getFormattedTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US); //h -> hours without leading zero,
-        // mm -> minutes with leading zero,
-        // a -> AM/PM
-        formatter.setTimeZone(TimeZone.getTimeZone(timezone));
-        return formatter.format(time * 1000); //time has to be in s
     }
 
     public void setTime(long time) {

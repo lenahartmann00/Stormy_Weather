@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String API_KEY = "82f98db283cc7166db051654bf6ab651";
+    private static final String BASE_URL_FORECAST = "https://api.darksky.net/forecast/";
 
     private CurrentWeather currentWeather;
     private CurrentLocation currentLocation = new CurrentLocation();
@@ -148,10 +150,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void getForecast() {
         getCurrentLocation();
-        String apiKey = "82f98db283cc7166db051654bf6ab651";
 
-        String forecastUrl = "https://api.darksky.net/forecast/"
-                + apiKey + "/" + currentLocation.getLatitude() + "," + currentLocation.getLongitude();
+        String forecastUrl = BASE_URL_FORECAST
+                + API_KEY + "/" + currentLocation.getLatitude() + "," + currentLocation.getLongitude();
         TextView darkSky = findViewById(R.id.txt_dark_sky);
         darkSky.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(Call call, Response response) {
                     try {
                         String jsonData = response.body().string();
                         if (response.isSuccessful()) {
@@ -190,12 +191,9 @@ public class MainActivity extends AppCompatActivity {
 
                             binding.setWeather(displayWeather);
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Drawable drawable = getResources().getDrawable(displayWeather.getIconId());
-                                    iconImageView.setImageDrawable(drawable);
-                                }
+                            runOnUiThread(() -> {
+                                Drawable drawable = getResources().getDrawable(displayWeather.getIconId());
+                                iconImageView.setImageDrawable(drawable);
                             });
                         } else {
                             alterUserAboutError();
@@ -223,8 +221,7 @@ public class MainActivity extends AppCompatActivity {
         currentWeather.setSummary(currently.getString("summary"));
         currentWeather.setIcon(currently.getString("icon"));
         currentWeather.setTimezone(forecast.getString("timezone"));
-        //Convert Fahrenheit to Celsius
-        double tempCelsius = ((currently.getDouble("temperature")) - 32) * 5 / 9;
+        double tempCelsius = CurrentWeather.convertFahrenheitToCelsius(currently.getDouble("temperature"));
         currentWeather.setTemperature(tempCelsius);
 
         return currentWeather;
