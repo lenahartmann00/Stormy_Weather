@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView iconImageView;
 
-    ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
 
     @Override
@@ -101,14 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCurrentLocation();
-                } else {
-                    Toast.makeText(this, "To use the app properly, please give permission to access your location", Toast.LENGTH_LONG).show();
-                }
+        if (requestCode == 1) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "To use the app properly, please give permission to access your location", Toast.LENGTH_LONG).show();
             }
         }
 
