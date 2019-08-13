@@ -76,6 +76,7 @@ public class CurrentWeather {
                 break;
             default:
                 iconId = R.drawable.clear_day;
+                break;
         }
         return iconId;
     }

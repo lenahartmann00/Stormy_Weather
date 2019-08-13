@@ -72,18 +72,26 @@ public class MainActivity extends AppCompatActivity {
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             updateLocation(lastKnownLocation);
             LocationListener locationListener = new LocationListener() {
+                @Override
                 public void onLocationChanged(Location location) {
                     updateLocation(location);
                 }
 
-                public void onStatusChanged(String provider, int status, Bundle extras) {
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+                    //Do nothing
                 }
 
-                public void onProviderEnabled(String provider) {
+                @Override
+                public void onProviderEnabled(String s) {
+                    //Do nothing
                 }
 
-                public void onProviderDisabled(String provider) {
+                @Override
+                public void onProviderDisabled(String s) {
+                    //Do nothing
                 }
+
             };
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) locationListener);
