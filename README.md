@@ -1,5 +1,6 @@
 # Stormy Weather 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/299af498ad064a658aae685089375cea)](https://www.codacy.com/app/lenahartmann00/Stormy_Weather?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lenahartmann00/Stormy_Weather&amp;utm_campaign=Badge_Grade)<br>
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/299af498ad064a658aae685089375cea)](https://www.codacy.com/app/lenahartmann00/Stormy_Weather?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lenahartmann00/Stormy_Weather&amp;utm_campaign=Badge_Grade) ![Test](https://img.shields.io/github/repo-size/lenahartmann00/Stormy_Weather)<br>
+
 Simple Android App to check the current weather.
 
 ## Description
